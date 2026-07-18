@@ -1,0 +1,81 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #08090b;
+  color: #e7ede9;
+}
+
+::selection {
+  background: #39ff8a;
+  color: #08090b;
+}
+
+a {
+  color: #39ff8a;
+}
+
+a:hover {
+  color: #7dffb5;
+}
+
+input,
+select,
+textarea {
+  font-family: var(--font-sora), sans-serif;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes scrollCode {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px 2px rgba(57, 255, 138, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 34px 6px rgba(57, 255, 138, 0.55);
+  }
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal.in {
+  animation: fadeUp 0.7s ease forwards;
+}
