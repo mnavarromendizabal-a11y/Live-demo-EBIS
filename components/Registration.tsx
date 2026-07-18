@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import Reveal from "./Reveal";
+import { supabase } from "@/lib/supabaseClient";
 
 type FormState = {
   name: string;
@@ -48,8 +49,9 @@ export default function Registration() {
   });
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errs: Errors = {};
     if (!form.name.trim()) errs.name = true;
@@ -64,6 +66,24 @@ export default function Registration() {
       setErrors(errs);
       return;
     }
+
+    setSubmitting(true);
+    const { error } = await supabase.from("registrations").insert({
+      name: form.name.trim(),
+      email: form.email.trim(),
+      company: form.company.trim() || null,
+      ticket: form.ticket,
+      terms_accepted: form.terms,
+    });
+    setSubmitting(false);
+
+    if (error) {
+      setErrors({
+        general: "No hemos podido registrar tu inscripción. Inténtalo de nuevo en unos minutos.",
+      });
+      return;
+    }
+
     setErrors({});
     setSubmitted(true);
   };
@@ -173,6 +193,7 @@ export default function Registration() {
             )}
             <button
               type="submit"
+              disabled={submitting}
               style={{
                 fontFamily: "var(--font-jetbrains-mono), monospace",
                 fontWeight: 700,
@@ -182,11 +203,12 @@ export default function Registration() {
                 padding: 16,
                 border: "none",
                 borderRadius: 6,
-                cursor: "pointer",
+                cursor: submitting ? "default" : "pointer",
+                opacity: submitting ? 0.7 : 1,
                 marginTop: 8,
               }}
             >
-              Confirmar inscripción →
+              {submitting ? "Enviando…" : "Confirmar inscripción →"}
             </button>
           </form>
         ) : (
